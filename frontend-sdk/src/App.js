@@ -1,13 +1,14 @@
+import { BrowserRouter, Route, Router, Routes } from "react-router-dom";
 import "./styles/tailwind.output.css";
-import React from "react";
-import { BrowserRouter } from "react-router-dom";
+import ChatMain from "./pages/ChatMain";
 
 const App = () => {
-  return <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<Home />} />
-    </Routes>
-  </BrowserRouter>
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route index element={<ChatMain />} />
+      </Routes>
+    </BrowserRouter>
   );
 };
 
