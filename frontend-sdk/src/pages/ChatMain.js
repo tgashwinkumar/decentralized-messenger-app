@@ -6,7 +6,7 @@ import { FiSend } from "react-icons/fi";
 const ChatMain = () => {
   return (
     <section className="w-full flex flex-col">
-      <Header />
+      <Header title="Chats"/>
       <div className="w-full flex">
         <div className="w-1/4 h-[calc(100vh-10rem)] overflow-y-auto overflow-x-auto">
           {initialData.map((item) => {
@@ -21,14 +21,24 @@ const ChatMain = () => {
         </div>
         <div className="w-3/4 h-full flex flex-col relative">
           <header className="flex h-fit items-center justify-between p-4 relative z-30 shadow-lg w-full">
-            <div className="space-y-2 ">
-              <h1 className="text-2xl font-semibold">Abra Pobjay</h1>
-              <h2 className="text-gray-400 text-sm">
-                0xb4be687f70319b847590fd6a4d9d853fd5b1e8ac
-              </h2>
+            <div className="flex items-center space-x-2">
+              <div
+                style={{
+                  background: `url(http://dummyimage.com/223x100.png/dddddd/000000)`,
+                  backgroundPosition: "center",
+                  backgroundSize: "cover",
+                }}
+                className="rounded-full aspect-square w-12 group-hover:scale-125 transition-all"
+              />
+              <div className="space-y-2 ">
+                <h1 className="text-2xl font-semibold">Abra Pobjay</h1>
+                <h2 className="text-gray-400 text-sm">
+                  0xb4be687f70319b847590fd6a4d9d853fd5b1e8ac
+                </h2>
+              </div>
             </div>
           </header>
-          <main className="bg-gray-100 overflow-y-auto h-[calc(100vw-76rem)] w-full px-4 py-4 relative z-0">
+          <main className="bg-gray-100 overflow-y-auto h-[calc(100vw-65rem)] w-full px-4 py-4 relative z-0">
             <section className="w-full space-y-2">
               {dummyChat.map((chat) =>
                 chat.side === "left" ? (
@@ -68,7 +78,7 @@ const ChatMain = () => {
 
 const ChatHandleNavItem = ({ ethAddress, handleName, handleImage }) => {
   return (
-    <div className="group z-30 relative flex items-center transition-all hover:bg-gray-200 justify-center p-4 border-b-2 border-b-gray-300 space-x-2">
+    <div className="group z-30 relative flex items-center transition-all hover:bg-gray-200 justify-center p-4 space-x-2">
       <div
         style={{
           background: `url(${handleImage})`,
@@ -146,37 +156,37 @@ const initialData = [
 const dummyChat = [
   {
     text: "Hey",
-    timestamp: "07:05 AM",
+    timestamp: "06:52 PM",
     side: "left",
     message_id: 4,
   },
   {
     text: "Hey",
-    timestamp: "07:00 AM",
+    timestamp: "06:56 PM",
     side: "right",
     message_id: 3,
   },
   {
     text: "Is our Application Development Project finished ?",
-    timestamp: "06:58 AM",
+    timestamp: "06:58 PM",
     side: "left",
     message_id: 2,
   },
   {
     text: "Yes, we have. It's called Qwert😉!",
-    timestamp: "06:58 AM",
+    timestamp: "06:58 PM",
     side: "right",
     message_id: 2,
   },
   {
     text: "Qwert???! What does it do ?",
-    timestamp: "06:58 AM",
+    timestamp: "06:58 PM",
     side: "left",
     message_id: 2,
   },
   {
     text: "It's decentralized messenger app, which also has crypto based payment, for cool people like us!",
-    timestamp: "06:58 AM",
+    timestamp: "06:58 PM",
     side: "right",
     message_id: 2,
   },
