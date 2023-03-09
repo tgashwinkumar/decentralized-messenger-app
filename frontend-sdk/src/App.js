@@ -9,18 +9,43 @@ import "./styles/tailwind.output.css";
 import ChatMain from "./pages/ChatMain";
 import Layout from "./pages/Layout";
 import Settings from "./pages/Settings";
+import { createContext, useState } from "react";
+import Gun from "gun";
+import Delete from "./pages/Delete";
+
+export const WalletContext = createContext();
+export const GunContext = createContext();
+
+const gun = Gun({
+  peers: ["http://localhost:5050/gun"],
+});
 
 const App = () => {
+  const [wAddress, setWAddress] = useState(
+    localStorage.getItem("walletAddress")
+  );
+
+  const gun = Gun({
+    peers: ["http://localhost:5000/gun"],
+  });
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="chat" element={<Layout />}>
-          <Route index element={<ChatMain />} />
-          <Route path="settings" element={<Settings />} />
-        </Route>
-        <Route index element={<Navigate to="chat" />} />
-      </Routes>
-    </BrowserRouter>
+    <GunContext.Provider value={{ gun }}>
+      <WalletContext.Provider
+        value={{ walletAddress: wAddress, setWalletAddress: setWAddress }}
+      >
+        <BrowserRouter>
+          <Routes>
+            <Route path="chat" element={<Layout />}>
+              <Route index element={<ChatMain />} />
+              <Route path="settings" element={<Settings />} />
+            </Route>
+            <Route path="delete" element={<Delete />} />
+            <Route index element={<Navigate to="chat" />} />
+          </Routes>
+        </BrowserRouter>
+      </WalletContext.Provider>
+    </GunContext.Provider>
   );
 };
 

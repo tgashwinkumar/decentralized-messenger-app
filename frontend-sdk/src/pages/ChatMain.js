@@ -1,14 +1,87 @@
-import React from "react";
+import React, { useContext, useEffect, useReducer, useState } from "react";
 import Header from "../components/Header";
 import { BiShare } from "react-icons/bi";
 import { FiSend } from "react-icons/fi";
+import { GunContext, WalletContext } from "../App";
+import { faker } from "@faker-js/faker";
+
+// The messages array will hold the chat messages
+const currentState = {
+  messages: [],
+};
+
+// This reducer function will edit the messages array
+const reducer = (state, message) => {
+  return {
+    messages: [message, ...state.messages],
+  };
+};
 
 const ChatMain = () => {
+  const { gun } = useContext(GunContext);
+  const [messageText, setMessageText] = useState("");
+  const [state, dispatch] = useReducer(reducer, currentState);
+
+  const [username, setUsername] = useState(
+    `${faker.name.firstName()} ${faker.name.lastName()}`
+  );
+  const [avatar, setAvatar] = useState(faker.image.avatar());
+
+  // fires immediately the page loads
+  useEffect(() => {
+    const messagesRef = gun.get("MESSAGES_REFRESH");
+
+    messagesRef.map().on((m) => {
+      console.log("messagesRef", m);
+      dispatch({
+        sender: m.sender,
+        avatar: m.avatar,
+        content: m.content,
+        timestamp: m.timestamp,
+      });
+    });
+  }, []);
+
+  // remove duplicate messages
+  const newMessagesArray = () => {
+    const formattedMessages = state.messages.filter((value, index) => {
+      const _value = JSON.stringify(value);
+      return (
+        index ===
+        state.messages.findIndex((obj) => {
+          return JSON.stringify(obj) === _value;
+        })
+      );
+    });
+
+    return formattedMessages;
+  };
+
+  // save message to gun / send message
+  const sendMessage = () => {
+    // a reference to the current room
+    const messagesRef = gun.get("MESSAGES_REFRESH");
+
+    // the message object to be sent/saved
+    const messageObject = {
+      sender: username,
+      avatar: avatar,
+      content: messageText,
+      timestamp: Date().substring(16, 21),
+    };
+
+    // this function sends/saves the message onto the network
+    messagesRef.set(messageObject);
+
+    // clear the text field after message has been sent
+    setMessageText("");
+  };
+
   return (
     <section className="w-full flex flex-col">
-      <Header title="Chats"/>
+      <Header title="Chats" className="h-24" />
       <div className="w-full flex">
-        <div className="w-1/4 h-[calc(100vh-10rem)] overflow-y-auto overflow-x-auto">
+        {/* <div className="w-1/4 h-[calc(100vh-6rem)] overflow-y-auto overflow-x-auto">
           {initialData.map((item) => {
             return (
               <ChatHandleNavItem
@@ -18,33 +91,33 @@ const ChatMain = () => {
               />
             );
           })}
-        </div>
-        <div className="w-3/4 h-full flex flex-col relative">
+        </div> */}
+        <div className="flex-1 h-[calc(100vh-6rem)] flex flex-col relative">
           <header className="flex h-fit items-center justify-between p-4 relative z-30 shadow-lg w-full">
             <div className="flex items-center space-x-2">
               <div
                 style={{
-                  background: `url(http://dummyimage.com/223x100.png/dddddd/000000)`,
+                  background: `url(${avatar})`,
                   backgroundPosition: "center",
                   backgroundSize: "cover",
                 }}
                 className="rounded-full aspect-square w-12 group-hover:scale-125 transition-all"
               />
               <div className="space-y-2 ">
-                <h1 className="text-2xl font-semibold">Abra Pobjay</h1>
+                <h1 className="text-2xl font-semibold">{username}</h1>
                 <h2 className="text-gray-400 text-sm">
                   0xb4be687f70319b847590fd6a4d9d853fd5b1e8ac
                 </h2>
               </div>
             </div>
           </header>
-          <main className="bg-gray-100 overflow-y-auto h-[calc(100vw-65rem)] w-full px-4 py-4 relative z-0">
+          <main className="bg-gray-100 overflow-y-auto h-[calc(100vw78rem)] flex-1 w-full px-4 py-4 relative z-0">
             <section className="w-full space-y-2">
-              {dummyChat.map((chat) =>
-                chat.side === "left" ? (
+              {newMessagesArray().map((chat) =>
+                username === chat.sender ? (
                   <div className="flex w-full items-center space-x-2">
                     <div className="max-w-[400px] w-fit bg-purple-600 text-white rounded-r-full rounded-tl-full px-4 py-2">
-                      {chat.text}
+                      {chat.content}
                     </div>
                     <p className="text-sm text-gray-400">{chat.timestamp}</p>
                     <div className="flex-1"></div>
@@ -54,7 +127,7 @@ const ChatMain = () => {
                     <div className="flex-1"></div>
                     <p className="text-sm text-gray-400">{chat.timestamp}</p>
                     <div className="max-w-[500px] w-fit bg-gray-300 text-black rounded-l-full rounded-tr-full px-4 py-2">
-                      {chat.text}
+                      {chat.content}
                     </div>
                   </div>
                 )
@@ -65,10 +138,15 @@ const ChatMain = () => {
             <input
               className="bg-white rounded-full px-6 py-3 flex-1 italic"
               placeholder={"Type something here ..."}
+              value={messageText}
+              onChange={(e) => setMessageText(e.target.value)}
             />
-            <div className="rounded-full bg-gradient-to-tl from-purple-700 to-purple-800 p-3 text-white">
+            <button
+              onClick={sendMessage}
+              className="rounded-full bg-gradient-to-tl from-purple-700 to-purple-800 p-3 text-white"
+            >
               <FiSend size={18} />
-            </div>
+            </button>
           </section>
         </div>
       </div>

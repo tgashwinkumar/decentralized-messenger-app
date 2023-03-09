@@ -8,7 +8,7 @@ const Layout = () => {
   );
 
   return (
-    <main className="h-screen w-screen overflow-hidden bg-[#F8F8F9] flex py-8">
+    <main className="h-screen w-screen overflow-hidden bg-[#F8F8F9] flex">
       <Navbar profileImage={profileImage} />
       <div className="w-full h-full">
         <Outlet />
