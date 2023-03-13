@@ -20,12 +20,21 @@ const Header = ({ title, className }) => {
       className={`${className} p-4 px-8 flex items-center justify-between`}
     >
       <h1 className="text-4xl font-semibold">{title}</h1>
+      <div className="flex space-x-8 items-center">
+
+      <button
+        onClick={() => window.open("http://localhost:4200")}
+        className="px-12 py-4 max-w-[35ch] overflow-hidden text-ellipsis rounded-full bg-gradient-to-r from-purple-700 to-pink-500 text-white font-semibold text- shadow-xl shadow-pink-300"
+      >
+      Proceed to Payment Portal
+      </button>
       <button
         onClick={connectWallet}
         className="px-12 py-4 max-w-[35ch] overflow-hidden text-ellipsis rounded-full bg-gradient-to-r from-purple-700 to-pink-500 text-white font-semibold text- shadow-xl shadow-pink-300"
       >
         {walletAddress ? walletAddress : "Connect Wallet"}
       </button>
+      </div>
     </header>
   );
 };

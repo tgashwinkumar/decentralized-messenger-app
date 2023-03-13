@@ -68,7 +68,7 @@
 
 const express = require("express");
 const app = express();
-const port = 5000;
+const port = 4050;
 const Gun = require("gun");
 
 app.use(Gun.serve);
